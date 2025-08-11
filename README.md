@@ -3,44 +3,23 @@ Real-time anomaly-triggered telemetry control for cost optimization and debuggin
 
 # Architecture 
 
-                           ┌──────────────────────────────────────────────────┐
-                           │                GRAFANA (Dashboards)              │
-                           │  - Service Health (RED)                          │
-                           │  - Pipeline KPIs + Mode Annotations              │
-                           └───────────────▲──────────────────────────────────┘
-                                           │  (reads)
-                                           │
-                                   ┌───────┴────────┐
-                                   │  PROMETHEUS    │
-                                   │  (Time-series) │
-                                   │  - Scrapes Vector / App metrics
-                                   └───────▲────────┘
-                                           │  (scrape /metrics)
-                  ┌────────────────────────┼────────────────────────┐
-                  │                        │                        │
-                  │                        │                        │
-        ┌─────────┴─────────┐      ┌───────┴────────┐      ┌───────┴────────┐
-        │   VECTOR (Pipeline)│      │  CONTROLLER    │      │  LOAD GENERATOR│
-        │  Ingest→Transform  │      │  (FastAPI/Go)  │      │   (wrk/k6)     │
-        │  →Redact→Sample→   │      │ - Poll PromQL  │      └────────────────┘
-        │  Route             │      │ - Decide policy (LOW/HIGH)      
-        │ Sources:           │      │ - Rewrite vector config + reload
-        │  - DogStatsD :8125 │      │ - Emit decision events
-        │  - OTLP HTTP :4318 │      └───────────┬────────────────────────────┐
-        │  - TCP logs :9000  │                  │ (hot reload / file swap)    │
-        │ Sinks:             │                  │                             │
-        │  - Prom exporter   │  writes          │                             │
-        │  - File (logs)     │  vector.generated.toml                          │
-        │  - File (traces)   │                                                │
-        └─────────▲──────────┘                                                │
-                  │ (DogStatsD / OTLP / TCP)                                   │
-     ┌────────────┼───────────────────────────────────────────────────────────┐│
-     │            │                                                           ││
-┌────┴─────┐  ┌───┴─────┐                                                     ││
-│  GO API  │  │ PY WORK │   (Structured JSON logs, metrics, traces)           ││
-│  /ok     │  │ jobs    │─────────────────────────────────────────────────────┘│
-│  /slow   │  │ +fail   │
-│  /error  │  │         │
-│  OTel +  │  │ OTel +  │
-│  DogStats│  │ DogStats│
-└──────────┘  └─────────┘
+flowchart LR
+  subgraph Apps
+    API[Go API\nOTel + DogStatsD]
+    Worker[Python Worker\nOTel + DogStatsD]
+  end
+
+  LoadGen[Load Generator\n(k6/wrk)] --> API
+
+  API -->|metrics/logs/traces| Vector
+  Worker -->|metrics/logs/traces| Vector
+
+  Vector[[Vector Pipeline\ningest → enrich → redact → sample → route]]
+  Vector -->|/metrics| Prometheus[(Prometheus TSDB)]
+  Prometheus -->|reads| Grafana[Grafana Dashboards]
+
+  Controller[Controller\n(FastAPI/Go)]
+  Controller -- PromQL polls --> Prometheus
+  Controller -- write config + reload --> Vector
+
+  Vector -->|logs/traces| Files[(File sinks)]
