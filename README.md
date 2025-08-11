@@ -20,10 +20,10 @@ flowchart LR
   Vector[["Vector Pipeline: ingest → enrich → redact → sample → route"]]
 
   %% Prometheus pulls (/metrics) from Vector
-  Vector -->|/metrics| Prometheus[("(Prometheus TSDB)")]
+  Prometheus[("(Prometheus TSDB)")] -->|scrape /metrics| Vector
 
   %% Grafana pulls (queries) from Prometheus
-  Prometheus -->|reads| Grafana["Grafana Dashboards"]
+  Grafana["Grafana Dashboards"] -->|reads| Prometheus
 
   Controller["Controller — FastAPI / Go"]
   Controller -- PromQL polls --> Prometheus
