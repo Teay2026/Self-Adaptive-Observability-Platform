@@ -26,4 +26,5 @@ flowchart LR
   Controller -- write config + reload --> Vector
 
   Vector -->|logs/traces| Files[(File sinks)]
+```
 
