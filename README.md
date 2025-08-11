@@ -8,23 +8,27 @@ Real-time anomaly-triggered telemetry control for cost optimization and debuggin
 ```mermaid
 flowchart LR
   subgraph Apps
-    API["Go API — OTel + DogStatsD"]
-    Worker["Python Worker — OTel + DogStatsD"]
+    API[Go API - OTel + DogStatsD]
+    Worker[Python Worker - OTel + DogStatsD]
   end
 
-  LoadGen["Load Generator (k6 / wrk)"] --> API
+  LoadGen[Load Generator (k6/wrk)] --> API
 
   API -->|metrics, logs, traces| Vector
   Worker -->|metrics, logs, traces| Vector
 
-  Vector[["Vector Pipeline: ingest → enrich → redact → sample → route"]]
-  Vector -->|/metrics| Prometheus[("(Prometheus TSDB)")]
-  Prometheus -->|reads| Grafana["Grafana Dashboards"]
+  Vector[Vector Pipeline: ingest -> enrich -> redact -> sample -> route]
 
-  Controller["Controller — FastAPI / Go"]
+  %% Prometheus pulls (/metrics) from Vector
+  Prometheus[(Prometheus TSDB)] -->|scrape /metrics| Vector
+
+  %% Grafana pulls (queries) from Prometheus
+  Grafana[Grafana Dashboards] -->|reads| Prometheus
+
+  Controller[Controller - FastAPI/Go]
   Controller -- PromQL polls --> Prometheus
   Controller -- write config + reload --> Vector
 
-  Vector -->|logs, traces| Files["(File sinks)"]
+  Vector -->|logs, traces| Files[(File sinks)]
 ```
 
