@@ -3,23 +3,34 @@ Real-time anomaly-triggered telemetry control for cost optimization and debuggin
 
 # Architecture 
 
-flowchart LR
-  subgraph Apps
-    API[Go API\nOTel + DogStatsD]
-    Worker[Python Worker\nOTel + DogStatsD]
-  end
-
-  LoadGen[Load Generator\n(k6/wrk)] --> API
-
-  API -->|metrics/logs/traces| Vector
-  Worker -->|metrics/logs/traces| Vector
-
-  Vector[[Vector Pipeline\ningest → enrich → redact → sample → route]]
-  Vector -->|/metrics| Prometheus[(Prometheus TSDB)]
-  Prometheus -->|reads| Grafana[Grafana Dashboards]
-
-  Controller[Controller\n(FastAPI/Go)]
-  Controller -- PromQL polls --> Prometheus
-  Controller -- write config + reload --> Vector
-
-  Vector -->|logs/traces| Files[(File sinks)]
+                              +------------------+
+                              |     GRAFANA      |
+                              |   (Dashboards)   |
+                              +---------^--------+
+                                        |
+                                        | reads
+                             +----------+----------+
+                             |      PROMETHEUS     |
+                             |   (time-series DB)  |
+                             +----------^----------+
+                                        | scrape /metrics
+               +------------------------+------------------------+
+               |                                                 |
+               |                                                 |
+        +------+-------+                                 +------+-------+
+        |    VECTOR    |                                 |  CONTROLLER  |
+        |  (Pipeline)  |                                 | (FastAPI/Go) |
+        | ingest->enrich->redact->sample->route          +------+-------+
+        +--^-------^---+                                        |
+           |       |                                            | writes config
+           |       |                                            v
+           |       +------------------> logs/traces files   [vector.generated.toml]
+           |
+           | DogStatsD / OTLP / TCP
+   +-------+------+                          +-----------------+
+   |   GO API     |                          |  PYTHON WORKER  |
+   | (OTel+StatsD)|                          | (OTel+StatsD)   |
+   +--------------+                          +-----------------+
+           ^
+           |
+      LOAD GENERATOR (k6 / wrk)
