@@ -1,0 +1,29 @@
+{
+    "title": "Vector / Prometheus Overview",
+    "timezone": "browser",
+    "panels": [
+      {
+        "type": "stat",
+        "title": "Targets UP (vector)",
+        "gridPos": { "w": 8, "h": 5, "x": 0, "y": 0 },
+        "datasource": { "type": "prometheus", "uid": "Prometheus" },
+        "targets": [{ "expr": "sum(up{job=\"vector\"})" }]
+      },
+      {
+        "type": "timeseries",
+        "title": "Events/s by component",
+        "gridPos": { "w": 16, "h": 10, "x": 8, "y": 0 },
+        "datasource": { "type": "prometheus", "uid": "Prometheus" },
+        "fieldConfig": { "defaults": { "unit": "ops" }, "overrides": [] },
+        "targets": [
+          {
+            "expr": "sum by(component_id) (rate(vector_component_received_events_total[5m]))",
+            "legendFormat": "{{component_id}}"
+          }
+        ]
+      }
+    ],
+    "schemaVersion": 38,
+    "version": 1
+  }
+  

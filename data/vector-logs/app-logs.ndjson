@@ -1,0 +1,118 @@
+{"host":"192.168.65.1","level":"info","msg":"hello from tcp log","port":62781,"service":"api","source_type":"socket","timestamp":"2025-08-13T10:11:44.182737883Z","ts":""}
+{"host":"192.168.65.1","level":"info","msg":"hello from tcp log","port":42656,"service":"api","source_type":"socket","timestamp":"2025-08-13T10:17:37.310731254Z","ts":""}
+{"host":"192.168.65.1","level":"info","msg":"hello from tcp log","port":27721,"service":"api","source_type":"socket","timestamp":"2025-08-13T10:18:21.106363303Z","ts":"2025-08-13T10:18:13Z"}
+{"host":"192.168.65.1","level":"info","msg":"log 1","port":56259,"service":"api","source_type":"socket","timestamp":"2025-08-13T10:18:35.890089670Z","ts":"2025-08-13T10:18:35Z"}
+{"host":"192.168.65.1","level":"info","msg":"log 2","port":43377,"service":"api","source_type":"socket","timestamp":"2025-08-13T10:18:36.014968920Z","ts":"2025-08-13T10:18:36Z"}
+{"host":"192.168.65.1","level":"info","msg":"log 3","port":37469,"service":"api","source_type":"socket","timestamp":"2025-08-13T10:18:36.138620087Z","ts":"2025-08-13T10:18:36Z"}
+{"host":"192.168.65.1","level":"info","msg":"log 4","port":22908,"service":"api","source_type":"socket","timestamp":"2025-08-13T10:18:36.266026212Z","ts":"2025-08-13T10:18:36Z"}
+{"host":"192.168.65.1","level":"info","msg":"log 5","port":19043,"service":"api","source_type":"socket","timestamp":"2025-08-13T10:18:36.392319170Z","ts":"2025-08-13T10:18:36Z"}
+{"host":"192.168.65.1","level":"info","msg":"log 1","port":50469,"service":"api","source_type":"socket","timestamp":"2025-08-15T05:44:39.763538385Z","ts":"2025-08-15T05:44:39Z"}
+{"host":"192.168.65.1","level":"info","msg":"log 2","port":41259,"service":"api","source_type":"socket","timestamp":"2025-08-15T05:44:39.772688802Z","ts":"2025-08-15T05:44:39Z"}
+{"host":"192.168.65.1","level":"info","msg":"log 3","port":56115,"service":"api","source_type":"socket","timestamp":"2025-08-15T05:44:39.779939760Z","ts":"2025-08-15T05:44:39Z"}
+{"host":"192.168.65.1","level":"info","msg":"log 4","port":34462,"service":"api","source_type":"socket","timestamp":"2025-08-15T05:44:39.786348135Z","ts":"2025-08-15T05:44:39Z"}
+{"host":"192.168.65.1","level":"info","msg":"log 5","port":56732,"service":"api","source_type":"socket","timestamp":"2025-08-15T05:44:39.791952677Z","ts":"2025-08-15T05:44:39Z"}
+{"host":"192.168.65.1","level":"info","msg":"log 1","port":50248,"service":"api","source_type":"socket","timestamp":"2025-08-15T05:53:34.119195257Z","ts":"2025-08-15T05:53:34Z"}
+{"host":"192.168.65.1","level":"info","msg":"log 2","port":54398,"service":"api","source_type":"socket","timestamp":"2025-08-15T05:53:34.126396007Z","ts":"2025-08-15T05:53:34Z"}
+{"host":"192.168.65.1","level":"info","msg":"log 3","port":36454,"service":"api","source_type":"socket","timestamp":"2025-08-15T05:53:34.132435382Z","ts":"2025-08-15T05:53:34Z"}
+{"host":"192.168.65.1","level":"info","msg":"log 4","port":24440,"service":"api","source_type":"socket","timestamp":"2025-08-15T05:53:34.138603507Z","ts":"2025-08-15T05:53:34Z"}
+{"host":"192.168.65.1","level":"info","msg":"log 5","port":17423,"service":"api","source_type":"socket","timestamp":"2025-08-15T05:53:34.144070341Z","ts":"2025-08-15T05:53:34Z"}
+{"host":"192.168.65.1","level":"info","message":"Hello Vector!","port":47354,"source_type":"socket","timestamp":"2025-08-15T06:16:44.415279512Z"}
+{"host":"192.168.65.1","level":"info","msg":"Hello Vector!","port":26127,"service":"demo","source_type":"socket","timestamp":"2025-08-15T06:22:13.444996137Z","ts":"2025-08-15T07:22:13+01:00"}
+{"host":"192.168.65.1","level":"info","msg":"Hello Vector!","port":44043,"service":"demo","source_type":"socket","timestamp":"2025-08-15T06:22:20.600189959Z","ts":"2025-08-15T07:22:20+01:00"}
+{"host":"192.168.65.1","level":"info","msg":"Hello Vector!","port":50925,"service":"demo","source_type":"socket","timestamp":"2025-08-15T06:22:34.670391966Z","ts":"2025-08-15T07:22:34+01:00"}
+{"host":"127.0.0.1","level":"info","msg":"hello","port":35073,"source_type":"socket","timestamp":"2025-08-15T06:22:46.468497846Z"}
+{"host":"192.168.65.1","level":"info","msg":"Hello Vector!","port":24440,"service":"demo","source_type":"socket","timestamp":"2025-08-15T06:24:30.377365380Z","ts":"2025-08-15T07:24:30+01:00"}
+{"host":"192.168.65.1","level":"info","msg":"Hello Vector!","port":39738,"service":"demo","source_type":"socket","timestamp":"2025-08-15T06:26:56.749938170Z"}
+{"host":"192.168.65.1","level":"info","msg":"Hello Vector!","port":41061,"service":"demo","source_type":"socket","timestamp":"2025-08-15T06:27:00.910082089Z"}
+{"host":"192.168.65.1","level":"info","msg":"Hello Vector!","port":65049,"service":"demo","source_type":"socket","timestamp":"2025-08-15T06:27:33.975337090Z"}
+{"host":"192.168.65.1","level":"info","msg":"hello","port":20350,"source_type":"socket","timestamp":"2025-08-15T06:55:45.666250679Z"}
+{"host":"192.168.65.1","level":"info","msg":"log number 1","port":25309,"source_type":"socket","timestamp":"2025-08-15T06:58:09.959933343Z"}
+{"host":"192.168.65.1","level":"info","msg":"log number 2","port":39394,"source_type":"socket","timestamp":"2025-08-15T06:58:10.975070469Z"}
+{"host":"192.168.65.1","level":"info","msg":"log number 3","port":56380,"source_type":"socket","timestamp":"2025-08-15T06:58:11.997347511Z"}
+{"host":"192.168.65.1","level":"info","msg":"log number 4","port":21288,"source_type":"socket","timestamp":"2025-08-15T06:58:13.018858845Z"}
+{"host":"192.168.65.1","level":"info","msg":"log number 5","port":17646,"source_type":"socket","timestamp":"2025-08-15T06:58:14.039982012Z"}
+{"host":"192.168.65.1","level":"info","msg":"log number 6","port":61564,"source_type":"socket","timestamp":"2025-08-15T06:58:15.057896179Z"}
+{"host":"192.168.65.1","level":"info","msg":"log number 7","port":46440,"source_type":"socket","timestamp":"2025-08-15T06:58:16.076813804Z"}
+{"host":"192.168.65.1","level":"info","msg":"log number 8","port":45549,"source_type":"socket","timestamp":"2025-08-15T06:58:17.099069680Z"}
+{"host":"192.168.65.1","level":"info","msg":"log number 9","port":26700,"source_type":"socket","timestamp":"2025-08-15T06:58:18.119163389Z"}
+{"host":"192.168.65.1","level":"info","msg":"log number 10","port":45945,"source_type":"socket","timestamp":"2025-08-15T06:58:19.137652292Z"}
+{"host":"192.168.65.1","level":"info","msg":"log number 11","port":21000,"source_type":"socket","timestamp":"2025-08-15T06:58:20.165802Z"}
+{"host":"192.168.65.1","level":"info","msg":"log number 12","port":40779,"source_type":"socket","timestamp":"2025-08-15T06:58:21.191752084Z"}
+{"host":"192.168.65.1","level":"info","msg":"log number 13","port":45468,"source_type":"socket","timestamp":"2025-08-15T06:58:22.217968835Z"}
+{"host":"192.168.65.1","level":"info","msg":"log number 14","port":50199,"source_type":"socket","timestamp":"2025-08-15T06:58:23.233281460Z"}
+{"host":"192.168.65.1","level":"info","msg":"log number 15","port":40159,"source_type":"socket","timestamp":"2025-08-15T06:58:24.249245127Z"}
+{"host":"192.168.65.1","level":"info","msg":"log number 16","port":39650,"source_type":"socket","timestamp":"2025-08-15T06:58:25.270963419Z"}
+{"host":"192.168.65.1","level":"info","msg":"log number 17","port":45667,"source_type":"socket","timestamp":"2025-08-15T06:58:26.291825045Z"}
+{"host":"192.168.65.1","level":"info","msg":"log number 18","port":55680,"source_type":"socket","timestamp":"2025-08-15T06:58:27.314744545Z"}
+{"host":"192.168.65.1","level":"info","msg":"log number 19","port":34783,"source_type":"socket","timestamp":"2025-08-15T06:58:28.339047379Z"}
+{"host":"192.168.65.1","level":"info","msg":"log number 20","port":64178,"source_type":"socket","timestamp":"2025-08-15T06:58:29.358756130Z"}
+{"host":"192.168.65.1","level":"info","msg":"log number 21","port":31062,"source_type":"socket","timestamp":"2025-08-15T06:58:30.381450255Z"}
+{"host":"192.168.65.1","level":"info","msg":"log number 22","port":23774,"source_type":"socket","timestamp":"2025-08-15T06:58:31.404335631Z"}
+{"host":"192.168.65.1","level":"info","msg":"log number 23","port":25113,"source_type":"socket","timestamp":"2025-08-15T06:58:32.418663548Z"}
+{"host":"192.168.65.1","level":"info","msg":"log number 24","port":30329,"source_type":"socket","timestamp":"2025-08-15T06:58:33.437937132Z"}
+{"host":"192.168.65.1","level":"info","msg":"log number 25","port":50380,"source_type":"socket","timestamp":"2025-08-15T06:58:34.464672466Z"}
+{"host":"192.168.65.1","level":"info","msg":"log number 26","port":28556,"source_type":"socket","timestamp":"2025-08-15T06:58:35.489524299Z"}
+{"host":"192.168.65.1","level":"info","msg":"log number 27","port":22229,"source_type":"socket","timestamp":"2025-08-15T06:58:36.513436300Z"}
+{"host":"192.168.65.1","level":"info","msg":"log number 28","port":49995,"source_type":"socket","timestamp":"2025-08-15T06:58:37.533569467Z"}
+{"host":"192.168.65.1","level":"info","msg":"log number 29","port":53764,"source_type":"socket","timestamp":"2025-08-15T06:58:38.557550592Z"}
+{"host":"192.168.65.1","level":"info","msg":"log number 30","port":45035,"source_type":"socket","timestamp":"2025-08-15T06:58:39.576125551Z"}
+{"env":"dev","host":"172.18.0.3","latency_ms":90,"level":"info","msg":"handled request","path":"/","port":52058,"service":"api","source_type":"socket","status":200,"time":"2025-08-15T07:10:59Z","timestamp":"2025-08-15T07:10:59.203782630Z"}
+{"env":"dev","host":"172.18.0.3","latency_ms":80,"level":"info","msg":"handled request","path":"/","port":52058,"service":"api","source_type":"socket","status":200,"time":"2025-08-15T07:10:59Z","timestamp":"2025-08-15T07:10:59.297816880Z"}
+{"env":"dev","host":"172.18.0.3","latency_ms":14,"level":"info","msg":"handled request","path":"/","port":52058,"service":"api","source_type":"socket","status":200,"time":"2025-08-15T07:10:59Z","timestamp":"2025-08-15T07:10:59.332263630Z"}
+{"env":"dev","host":"172.18.0.3","latency_ms":78,"level":"info","msg":"handled request","path":"/","port":52058,"service":"api","source_type":"socket","status":200,"time":"2025-08-15T07:10:59Z","timestamp":"2025-08-15T07:10:59.425071130Z"}
+{"env":"dev","host":"172.18.0.3","latency_ms":38,"level":"info","msg":"handled request","path":"/","port":52058,"service":"api","source_type":"socket","status":200,"time":"2025-08-15T07:10:59Z","timestamp":"2025-08-15T07:10:59.484018213Z"}
+{"env":"dev","host":"172.18.0.3","latency_ms":49,"level":"error","msg":"handled request","path":"/","port":52058,"service":"api","source_type":"socket","status":500,"time":"2025-08-15T07:10:59Z","timestamp":"2025-08-15T07:10:59.555224338Z"}
+{"env":"dev","host":"172.18.0.3","latency_ms":55,"level":"error","msg":"handled request","path":"/","port":52058,"service":"api","source_type":"socket","status":500,"time":"2025-08-15T07:10:59Z","timestamp":"2025-08-15T07:10:59.631345963Z"}
+{"env":"dev","host":"172.18.0.3","latency_ms":54,"level":"info","msg":"handled request","path":"/","port":52058,"service":"api","source_type":"socket","status":200,"time":"2025-08-15T07:10:59Z","timestamp":"2025-08-15T07:10:59.705373172Z"}
+{"env":"dev","host":"172.18.0.3","latency_ms":75,"level":"info","msg":"handled request","path":"/","port":52058,"service":"api","source_type":"socket","status":200,"time":"2025-08-15T07:10:59Z","timestamp":"2025-08-15T07:10:59.792874713Z"}
+{"env":"dev","host":"172.18.0.3","latency_ms":40,"level":"info","msg":"handled request","path":"/","port":52058,"service":"api","source_type":"socket","status":200,"time":"2025-08-15T07:10:59Z","timestamp":"2025-08-15T07:10:59.853488213Z"}
+{"env":"dev","host":"172.18.0.3","latency_ms":87,"level":"info","msg":"handled request","path":"/","port":52058,"service":"api","source_type":"socket","status":200,"time":"2025-08-15T07:10:59Z","timestamp":"2025-08-15T07:10:59.960112463Z"}
+{"env":"dev","host":"172.18.0.3","latency_ms":88,"level":"info","msg":"handled request","path":"/","port":52058,"service":"api","source_type":"socket","status":200,"time":"2025-08-15T07:11:00Z","timestamp":"2025-08-15T07:11:00.067912213Z"}
+{"env":"dev","host":"172.18.0.3","latency_ms":1,"level":"info","msg":"handled request","path":"/","port":52058,"service":"api","source_type":"socket","status":200,"time":"2025-08-15T07:11:00Z","timestamp":"2025-08-15T07:11:00.081285547Z"}
+{"env":"dev","host":"172.18.0.3","latency_ms":21,"level":"info","msg":"handled request","path":"/","port":52058,"service":"api","source_type":"socket","status":200,"time":"2025-08-15T07:11:00Z","timestamp":"2025-08-15T07:11:00.112073380Z"}
+{"env":"dev","host":"172.18.0.3","latency_ms":56,"level":"info","msg":"handled request","path":"/","port":52058,"service":"api","source_type":"socket","status":200,"time":"2025-08-15T07:11:00Z","timestamp":"2025-08-15T07:11:00.177544422Z"}
+{"env":"dev","host":"172.18.0.3","latency_ms":43,"level":"info","msg":"handled request","path":"/","port":52058,"service":"api","source_type":"socket","status":200,"time":"2025-08-15T07:11:00Z","timestamp":"2025-08-15T07:11:00.229741380Z"}
+{"env":"dev","host":"172.18.0.3","latency_ms":85,"level":"info","msg":"handled request","path":"/","port":52058,"service":"api","source_type":"socket","status":200,"time":"2025-08-15T07:11:00Z","timestamp":"2025-08-15T07:11:00.329128338Z"}
+{"env":"dev","host":"172.18.0.3","latency_ms":55,"level":"info","msg":"handled request","path":"/","port":52058,"service":"api","source_type":"socket","status":200,"time":"2025-08-15T07:11:00Z","timestamp":"2025-08-15T07:11:00.403917714Z"}
+{"env":"dev","host":"172.18.0.3","latency_ms":37,"level":"info","msg":"handled request","path":"/","port":52058,"service":"api","source_type":"socket","status":200,"time":"2025-08-15T07:11:00Z","timestamp":"2025-08-15T07:11:00.461772464Z"}
+{"env":"dev","host":"172.18.0.3","latency_ms":35,"level":"info","msg":"handled request","path":"/","port":52058,"service":"api","source_type":"socket","status":200,"time":"2025-08-15T07:11:00Z","timestamp":"2025-08-15T07:11:00.516867422Z"}
+{"env":"dev","host":"172.18.0.3","latency_ms":54,"level":"info","msg":"handled request","path":"/","port":52058,"service":"api","source_type":"socket","status":200,"time":"2025-08-15T07:11:06Z","timestamp":"2025-08-15T07:11:06.910035675Z"}
+{"env":"dev","host":"172.18.0.3","latency_ms":56,"level":"info","msg":"handled request","path":"/","port":52058,"service":"api","source_type":"socket","status":200,"time":"2025-08-15T07:11:06Z","timestamp":"2025-08-15T07:11:06.981852633Z"}
+{"env":"dev","host":"172.18.0.3","latency_ms":61,"level":"info","msg":"handled request","path":"/","port":52058,"service":"api","source_type":"socket","status":200,"time":"2025-08-15T07:11:07Z","timestamp":"2025-08-15T07:11:07.064583967Z"}
+{"env":"dev","host":"172.18.0.3","latency_ms":21,"level":"info","msg":"handled request","path":"/","port":52058,"service":"api","source_type":"socket","status":200,"time":"2025-08-15T07:11:07Z","timestamp":"2025-08-15T07:11:07.106592300Z"}
+{"env":"dev","host":"172.18.0.3","latency_ms":73,"level":"info","msg":"handled request","path":"/","port":52058,"service":"api","source_type":"socket","status":200,"time":"2025-08-15T07:11:07Z","timestamp":"2025-08-15T07:11:07.198389467Z"}
+{"env":"dev","host":"172.18.0.3","latency_ms":105,"level":"info","msg":"handled request","path":"/","port":52058,"service":"api","source_type":"socket","status":200,"time":"2025-08-15T07:11:07Z","timestamp":"2025-08-15T07:11:07.324525883Z"}
+{"env":"dev","host":"172.18.0.3","latency_ms":82,"level":"info","msg":"handled request","path":"/","port":52058,"service":"api","source_type":"socket","status":200,"time":"2025-08-15T07:11:07Z","timestamp":"2025-08-15T07:11:07.421307384Z"}
+{"env":"dev","host":"172.18.0.3","latency_ms":60,"level":"info","msg":"handled request","path":"/","port":52058,"service":"api","source_type":"socket","status":200,"time":"2025-08-15T07:11:07Z","timestamp":"2025-08-15T07:11:07.500389592Z"}
+{"env":"dev","host":"172.18.0.3","latency_ms":59,"level":"info","msg":"handled request","path":"/","port":52058,"service":"api","source_type":"socket","status":200,"time":"2025-08-15T07:11:07Z","timestamp":"2025-08-15T07:11:07.580300759Z"}
+{"env":"dev","host":"172.18.0.3","latency_ms":61,"level":"info","msg":"handled request","path":"/","port":52058,"service":"api","source_type":"socket","status":200,"time":"2025-08-15T07:11:07Z","timestamp":"2025-08-15T07:11:07.664581009Z"}
+{"env":"dev","host":"172.18.0.3","latency_ms":49,"level":"info","msg":"handled request","path":"/","port":52058,"service":"api","source_type":"socket","status":200,"time":"2025-08-15T07:11:07Z","timestamp":"2025-08-15T07:11:07.734357509Z"}
+{"env":"dev","host":"172.18.0.3","latency_ms":56,"level":"info","msg":"handled request","path":"/","port":52058,"service":"api","source_type":"socket","status":200,"time":"2025-08-15T07:11:07Z","timestamp":"2025-08-15T07:11:07.813909509Z"}
+{"env":"dev","host":"172.18.0.3","latency_ms":35,"level":"info","msg":"handled request","path":"/","port":52058,"service":"api","source_type":"socket","status":200,"time":"2025-08-15T07:11:07Z","timestamp":"2025-08-15T07:11:07.862044800Z"}
+{"env":"dev","host":"172.18.0.3","latency_ms":52,"level":"info","msg":"handled request","path":"/","port":52058,"service":"api","source_type":"socket","status":200,"time":"2025-08-15T07:11:07Z","timestamp":"2025-08-15T07:11:07.923085925Z"}
+{"env":"dev","host":"172.18.0.3","latency_ms":82,"level":"info","msg":"handled request","path":"/","port":52058,"service":"api","source_type":"socket","status":200,"time":"2025-08-15T07:11:08Z","timestamp":"2025-08-15T07:11:08.014152467Z"}
+{"env":"dev","host":"172.18.0.3","latency_ms":0,"level":"info","msg":"handled request","path":"/","port":52058,"service":"api","source_type":"socket","status":200,"time":"2025-08-15T07:11:08Z","timestamp":"2025-08-15T07:11:08.024871134Z"}
+{"env":"dev","host":"172.18.0.3","latency_ms":31,"level":"info","msg":"handled request","path":"/","port":52058,"service":"api","source_type":"socket","status":200,"time":"2025-08-15T07:11:08Z","timestamp":"2025-08-15T07:11:08.065509675Z"}
+{"env":"dev","host":"172.18.0.3","latency_ms":68,"level":"info","msg":"handled request","path":"/","port":52058,"service":"api","source_type":"socket","status":200,"time":"2025-08-15T07:11:08Z","timestamp":"2025-08-15T07:11:08.143996967Z"}
+{"env":"dev","host":"172.18.0.3","latency_ms":47,"level":"info","msg":"handled request","path":"/","port":52058,"service":"api","source_type":"socket","status":200,"time":"2025-08-15T07:11:08Z","timestamp":"2025-08-15T07:11:08.210351592Z"}
+{"env":"dev","host":"172.18.0.3","latency_ms":22,"level":"info","msg":"handled request","path":"/","port":52058,"service":"api","source_type":"socket","status":200,"time":"2025-08-15T07:11:08Z","timestamp":"2025-08-15T07:11:08.253648801Z"}
+{"env":"dev","host":"172.18.0.3","latency_ms":12,"level":"info","msg":"handled request","path":"/","port":52058,"service":"api","source_type":"socket","status":200,"time":"2025-08-15T07:13:14Z","timestamp":"2025-08-15T07:13:14.426610637Z"}
+{"env":"dev","host":"172.18.0.3","latency_ms":61,"level":"info","msg":"handled request","path":"/","port":52058,"service":"api","source_type":"socket","status":200,"time":"2025-08-15T07:13:14Z","timestamp":"2025-08-15T07:13:14.499573804Z"}
+{"env":"dev","host":"172.18.0.3","latency_ms":74,"level":"info","msg":"handled request","path":"/","port":52058,"service":"api","source_type":"socket","status":200,"time":"2025-08-15T07:13:14Z","timestamp":"2025-08-15T07:13:14.588979179Z"}
+{"env":"dev","host":"172.18.0.3","latency_ms":63,"level":"info","msg":"handled request","path":"/","port":52058,"service":"api","source_type":"socket","status":200,"time":"2025-08-15T07:13:14Z","timestamp":"2025-08-15T07:13:14.673255304Z"}
+{"env":"dev","host":"172.18.0.3","latency_ms":77,"level":"info","msg":"handled request","path":"/","port":52058,"service":"api","source_type":"socket","status":200,"time":"2025-08-15T07:13:14Z","timestamp":"2025-08-15T07:13:14.771807804Z"}
+{"env":"dev","host":"172.18.0.3","latency_ms":28,"level":"info","msg":"handled request","path":"/","port":52058,"service":"api","source_type":"socket","status":200,"time":"2025-08-15T07:13:14Z","timestamp":"2025-08-15T07:13:14.821983262Z"}
+{"env":"dev","host":"172.18.0.3","latency_ms":92,"level":"info","msg":"handled request","path":"/","port":52058,"service":"api","source_type":"socket","status":200,"time":"2025-08-15T07:13:14Z","timestamp":"2025-08-15T07:13:14.934906470Z"}
+{"env":"dev","host":"172.18.0.3","latency_ms":51,"level":"info","msg":"handled request","path":"/","port":52058,"service":"api","source_type":"socket","status":200,"time":"2025-08-15T07:13:15Z","timestamp":"2025-08-15T07:13:15.007062387Z"}
+{"env":"dev","host":"172.18.0.3","latency_ms":78,"level":"info","msg":"handled request","path":"/","port":52058,"service":"api","source_type":"socket","status":200,"time":"2025-08-15T07:13:15Z","timestamp":"2025-08-15T07:13:15.105601304Z"}
+{"env":"dev","host":"172.18.0.3","latency_ms":71,"level":"info","msg":"handled request","path":"/","port":52058,"service":"api","source_type":"socket","status":200,"time":"2025-08-15T07:13:15Z","timestamp":"2025-08-15T07:13:15.198448096Z"}
+{"env":"dev","host":"172.18.0.3","latency_ms":77,"level":"info","msg":"handled request","path":"/","port":52058,"service":"api","source_type":"socket","status":200,"time":"2025-08-15T07:13:15Z","timestamp":"2025-08-15T07:13:15.287470387Z"}
+{"env":"dev","host":"172.18.0.3","latency_ms":14,"level":"info","msg":"handled request","path":"/","port":52058,"service":"api","source_type":"socket","status":200,"time":"2025-08-15T07:13:15Z","timestamp":"2025-08-15T07:13:15.314641012Z"}
+{"env":"dev","host":"172.18.0.3","latency_ms":33,"level":"info","msg":"handled request","path":"/","port":52058,"service":"api","source_type":"socket","status":200,"time":"2025-08-15T07:13:15Z","timestamp":"2025-08-15T07:13:15.359444221Z"}
+{"env":"dev","host":"172.18.0.3","latency_ms":52,"level":"info","msg":"handled request","path":"/","port":52058,"service":"api","source_type":"socket","status":200,"time":"2025-08-15T07:13:15Z","timestamp":"2025-08-15T07:13:15.423298554Z"}
+{"env":"dev","host":"172.18.0.3","latency_ms":83,"level":"info","msg":"handled request","path":"/","port":52058,"service":"api","source_type":"socket","status":200,"time":"2025-08-15T07:13:15Z","timestamp":"2025-08-15T07:13:15.515866012Z"}
+{"env":"dev","host":"172.18.0.3","latency_ms":31,"level":"error","msg":"handled request","path":"/","port":52058,"service":"api","source_type":"socket","status":500,"time":"2025-08-15T07:13:15Z","timestamp":"2025-08-15T07:13:15.556514721Z"}
+{"env":"dev","host":"172.18.0.3","latency_ms":81,"level":"info","msg":"handled request","path":"/","port":52058,"service":"api","source_type":"socket","status":200,"time":"2025-08-15T07:13:15Z","timestamp":"2025-08-15T07:13:15.649773137Z"}
+{"env":"dev","host":"172.18.0.3","latency_ms":25,"level":"info","msg":"handled request","path":"/","port":52058,"service":"api","source_type":"socket","status":200,"time":"2025-08-15T07:13:15Z","timestamp":"2025-08-15T07:13:15.687835304Z"}
+{"env":"dev","host":"172.18.0.3","latency_ms":24,"level":"info","msg":"handled request","path":"/","port":52058,"service":"api","source_type":"socket","status":200,"time":"2025-08-15T07:13:15Z","timestamp":"2025-08-15T07:13:15.722618179Z"}
+{"env":"dev","host":"172.18.0.3","latency_ms":65,"level":"info","msg":"handled request","path":"/","port":52058,"service":"api","source_type":"socket","status":200,"time":"2025-08-15T07:13:15Z","timestamp":"2025-08-15T07:13:15.799964638Z"}

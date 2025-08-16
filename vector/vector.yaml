@@ -1,0 +1,38 @@
+api:
+  enabled: true
+  address: "0.0.0.0:8686"      # healthcheck hits /health here
+
+sources:
+  # Internal self-metrics → scrape via Prometheus exporter
+  internal_metrics:
+    type: internal_metrics
+
+  # DogStatsD/StatsD metrics (UDP 8125)
+  statsd_metrics:
+    type: statsd
+    address: "0.0.0.0:8125"
+    mode: "udp" 
+    use_tags: true          # keep dogstatsd tag semantics
+
+  # App logs over TCP (compose exposes 9000)
+  app_logs:
+    type: socket
+    address: "0.0.0.0:9000"
+    mode: tcp
+    decoding:
+      codec: json              # expect JSON lines; use "text" if you send plain text
+
+sinks:
+  # Prometheus exporter for metrics (HTTP 9090)
+  prometheus_exporter:
+    type: prometheus_exporter
+    inputs: ["internal_metrics", "statsd_metrics"]
+    address: "0.0.0.0:9090"
+
+  # Write logs to a file (host-mounted /var/log)
+  logs_file:
+    type: file
+    inputs: ["app_logs"]
+    path: "/var/log/app-logs.ndjson"
+    encoding:
+      codec: json
