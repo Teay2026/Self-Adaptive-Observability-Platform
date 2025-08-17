@@ -22,11 +22,19 @@ sources:
     decoding:
       codec: json              # expect JSON lines; use "text" if you send plain text
 
+transforms:
+  sanitize_statsd:
+    type: remap
+    inputs: ["statsd_metrics"]
+    source: |
+      .name = replace!(.name, ".", "_")
+      .name = replace!(.name, " ", "_")
+
 sinks:
   # Prometheus exporter for metrics (HTTP 9090)
   prometheus_exporter:
     type: prometheus_exporter
-    inputs: ["internal_metrics", "statsd_metrics"]
+    inputs: ["internal_metrics", "sanitize_statsd"]
     address: "0.0.0.0:9090"
 
   # Write logs to a file (host-mounted /var/log)

@@ -32,7 +32,6 @@ func main() {
 	// ============================
 	// 1) Lire la config via les variables d'environnement
 	// ============================
-	// getenv est une fonction utilitaire définie plus bas
 	statsdAddr := getenv("STATSD_ADDR", "vector:8125") // UDP DogStatsD vers Vector
 	logAddr := getenv("LOG_TARGET", "vector:9000")     // TCP logs vers Vector
 	service := getenv("SERVICE_NAME", "api")
@@ -48,9 +47,9 @@ func main() {
 		statsd.Tags("service:"+service, "env:"+env), // ✅ liste de "clé:valeur"
 	)
 	if err != nil {
-		log.Fatalf("statsd init failed: %v", err) // arrête le programme si erreur
+		log.Fatalf("statsd init failed: %v", err)
 	}
-	defer c.Close() // ferme la connexion UDP à la fin
+	defer c.Close()
 
 	// ============================
 	// 3) Connexion TCP à Vector pour logs
@@ -64,7 +63,7 @@ func main() {
 	// ============================
 	// 4) Serveur HTTP
 	// ============================
-	mux := http.NewServeMux() // crée un nouveau "multiplexeur" de routes
+	mux := http.NewServeMux()
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		start := time.Now()
 
@@ -79,12 +78,17 @@ func main() {
 			fmt.Fprintln(w, "ok")
 		}
 
-		// Latence en ms pour le log (float, pratique à lire)
+		// Latence en ms pour le log
 		latencyMs := float64(time.Since(start).Milliseconds())
 
-		// 4a) Émettre métriques DogStatsD (API alexcesaro/statsd.v2)
-		c.Increment("requests")                              // ✅ compteur +1
-		c.Timing("request_duration_ms", time.Since(start))   // ✅ duration (pas un float)
+		// 4a) Émettre métriques DogStatsD
+		c.Increment("requests")                            // api_requests_total
+		c.Timing("request_duration_ms", time.Since(start)) // api_request_duration_ms_{sum,count}
+
+		// 👉 NOUVEAU : incrémente le compteur d’erreurs si status >= 500
+		if status >= 500 {
+			c.Increment("errors") // api_errors_total
+		}
 
 		// 4b) Écrire un log JSON via TCP
 		ev := LogEvent{
@@ -97,7 +101,7 @@ func main() {
 			Latency: latencyMs,
 			Time:    time.Now().Format(time.RFC3339),
 		}
-		b, _ := json.Marshal(ev) // conversion struct → JSON
+		b, _ := json.Marshal(ev)
 		fmt.Fprintln(conn, string(b))
 	})
 
