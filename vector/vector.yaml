@@ -11,8 +11,8 @@ sources:
   statsd_metrics:
     type: statsd
     address: "0.0.0.0:8125"
-    mode: "udp" 
-    use_tags: true          # keep dogstatsd tag semantics
+    mode: "udp"
+    use_tags: true          # DogStatsD tags support
 
   # App logs over TCP (compose exposes 9000)
   app_logs:
@@ -22,19 +22,13 @@ sources:
     decoding:
       codec: json              # expect JSON lines; use "text" if you send plain text
 
-transforms:
-  sanitize_statsd:
-    type: remap
-    inputs: ["statsd_metrics"]
-    source: |
-      .name = replace!(.name, ".", "_")
-      .name = replace!(.name, " ", "_")
+
 
 sinks:
   # Prometheus exporter for metrics (HTTP 9090)
   prometheus_exporter:
     type: prometheus_exporter
-    inputs: ["internal_metrics", "sanitize_statsd"]
+    inputs: ["internal_metrics"]
     address: "0.0.0.0:9090"
 
   # Write logs to a file (host-mounted /var/log)
@@ -44,3 +38,4 @@ sinks:
     path: "/var/log/app-logs.ndjson"
     encoding:
       codec: json
+

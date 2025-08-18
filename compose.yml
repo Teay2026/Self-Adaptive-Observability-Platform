@@ -1,25 +1,18 @@
-version: "3.9"
-
+# compose.yml
 services:
   vector:
-    image: timberio/vector:0.48.0-alpine
-    command: ["--config", "/etc/vector/vector.yaml", "--watch-config"]
+    image: timberio/vector:0.48.0-debian
     volumes:
       - ./vector/vector.yaml:/etc/vector/vector.yaml:ro
-      # ↓ NOUVEAU : on monte un dossier hôte pour récupérer le fichier de logs écrit par Vector
       - ./data/vector-logs:/var/log
+
     ports:
-      - "9090:9090"           # Prometheus exporter (HTTP) - Prometheus scrape ici
-      - "8686:8686"           # Admin API (HTTP) - santé & reload
-      - "8125:8125/udp"       # DogStatsD (UDP) - métriques en entrée
-      - "9000:9000"           # NOUVEAU: socket logs (TCP) - logs JSON en entrée
-    healthcheck:
-      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:8686/health >/dev/null 2>&1 || exit 1"]
-      interval: 5s
-      timeout: 2s
-      retries: 20
-      start_period: 15s
-    restart: unless-stopped
+      - "9090:9090"     # Prometheus exporter
+      - "8686:8686"     # Admin API
+      - "8125:8125/udp" # DogStatsD (optional)
+
+
+
 
   prometheus:
     image: prom/prometheus:latest
@@ -27,40 +20,38 @@ services:
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
     ports:
-      - "9091:9090"           # Prom UI sur localhost:9091 (évite conflit avec 9090 de Vector)
+      - "9091:9090"
     depends_on:
       vector:
-        condition: service_healthy
+        condition: service_started
     restart: unless-stopped
 
   grafana:
     image: grafana/grafana:latest
     ports:
-      - "3000:3000"           # Grafana UI → http://localhost:3000
+      - "3000:3000"
     environment:
-      GF_SERVER_DOMAIN: localhost
-      GF_SECURITY_ADMIN_USER: admin
-      GF_SECURITY_ADMIN_PASSWORD: admin
-      GF_USERS_DEFAULT_THEME: dark
+      - GF_SERVER_DOMAIN=localhost
     volumes:
-      - ./grafana/provisioning:/etc/grafana/provisioning:ro
-      - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
-    depends_on:
-      - prometheus
+      - ./grafana/provisioning:/etc/grafana/provisioning
+      - ./grafana/dashboards:/var/lib/grafana/dashboards
 
-  # NOUVEAU : service applicatif Go
+    depends_on:
+      prometheus:
+        condition: service_started
+    restart: unless-stopped
+
+
   go-api:
     build: ./go-api
     environment:
-      # Adresse DogStatsD (UDP) dans le réseau Docker
       - STATSD_ADDR=vector:8125
-      # Adresse du socket TCP logs dans le réseau Docker
       - LOG_TARGET=vector:9000
       - SERVICE_NAME=api
       - ENV=dev
-    ports:
-      - "8080:8080"           # expose l’API pour envoyer du trafic depuis ton Mac
     depends_on:
       vector:
-        condition: service_healthy
+        condition: service_started
+    ports:
+      - "8080:8080"
     restart: unless-stopped

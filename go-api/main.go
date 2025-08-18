@@ -9,7 +9,15 @@ import (
 	"net"           // pour gérer les connexions réseau (TCP ici)
 	"net/http"      // pour créer notre serveur HTTP
 	"os"            // pour lire les variables d'environnement
-	"time"          // pour mesurer le temps d'exécution et ajouter des horodatages
+	"strconv"
+
+	// pour parser le taux depuis la query string
+	"sync/atomic" // pour stocker le taux de sampling de manière thread-safe
+	"time"        // pour mesurer le temps d'exécution et ajouter des horodatages
+
+	// Prometheus client
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 
 	// Package externe : client DogStatsD en Go
 	"gopkg.in/alexcesaro/statsd.v2"
@@ -28,6 +36,24 @@ type LogEvent struct {
 	Time    string  `json:"time"`
 }
 
+var (
+	promRequests = prometheus.NewCounter(prometheus.CounterOpts{
+		Name: "api_requests_total",
+		Help: "Total HTTP requests",
+	})
+	promErrors = prometheus.NewCounter(prometheus.CounterOpts{
+		Name: "api_errors_total",
+		Help: "Total HTTP 5xx errors",
+	})
+	promLatency = prometheus.NewHistogram(prometheus.HistogramOpts{
+		Name:    "api_request_duration_seconds",
+		Help:    "Request duration seconds",
+		Buckets: prometheus.DefBuckets,
+	})
+)
+
+var sampleRate atomic.Value // float64 in [0,1]
+
 func main() {
 	// ============================
 	// 1) Lire la config via les variables d'environnement
@@ -37,13 +63,19 @@ func main() {
 	service := getenv("SERVICE_NAME", "api")
 	env := getenv("ENV", "dev")
 
+	// Taux de sampling initial (1.0 = pas de sampling)
+	sampleRate.Store(1.0)
+
+	// Enregistrer les métriques Prometheus
+	prometheus.MustRegister(promRequests, promErrors, promLatency)
+
 	// ============================
 	// 2) Connexion UDP au client DogStatsD
 	// ============================
 	c, err := statsd.New(
-		statsd.Address(statsdAddr),        // où envoyer
-		statsd.Prefix("api."),             // préfixe pour toutes les métriques
-		statsd.TagsFormat(statsd.Datadog), // format de tags DogStatsD
+		statsd.Address(statsdAddr),                  // où envoyer
+		statsd.Prefix("api_"),                       // préfixe Prometheus-friendly
+		statsd.TagsFormat(statsd.Datadog),           // format de tags DogStatsD
 		statsd.Tags("service:"+service, "env:"+env), // ✅ liste de "clé:valeur"
 	)
 	if err != nil {
@@ -64,6 +96,9 @@ func main() {
 	// 4) Serveur HTTP
 	// ============================
 	mux := http.NewServeMux()
+	// Exposer /metrics pour Prometheus
+	mux.Handle("/metrics", promhttp.Handler())
+
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		start := time.Now()
 
@@ -78,19 +113,28 @@ func main() {
 			fmt.Fprintln(w, "ok")
 		}
 
-		// Latence en ms pour le log
-		latencyMs := float64(time.Since(start).Milliseconds())
+		// Latence
+		latency := time.Since(start)
+		latencyMs := float64(latency.Milliseconds())
 
-		// 4a) Émettre métriques DogStatsD
-		c.Increment("requests")                            // api_requests_total
-		c.Timing("request_duration_ms", time.Since(start)) // api_request_duration_ms_{sum,count}
-
-		// 👉 NOUVEAU : incrémente le compteur d’erreurs si status >= 500
+		// Prometheus metrics (toujours)
+		promRequests.Inc()
+		promLatency.Observe(latency.Seconds())
 		if status >= 500 {
-			c.Increment("errors") // api_errors_total
+			promErrors.Inc()
 		}
 
-		// 4b) Écrire un log JSON via TCP
+		// Décider une fois si on sample cet événement (DogStatsD)
+		sampled := shouldSample()
+		if sampled {
+			c.Increment("requests")
+			c.Timing("request_duration_ms", latency)
+		}
+		if status >= 500 {
+			c.Increment("errors")
+		}
+
+		// Log JSON via TCP (erreurs toujours, info selon sampling)
 		ev := LogEvent{
 			Service: service,
 			Env:     env,
@@ -101,8 +145,33 @@ func main() {
 			Latency: latencyMs,
 			Time:    time.Now().Format(time.RFC3339),
 		}
-		b, _ := json.Marshal(ev)
-		fmt.Fprintln(conn, string(b))
+		if status >= 500 || sampled {
+			b, _ := json.Marshal(ev)
+			fmt.Fprintln(conn, string(b))
+		}
+	})
+
+	// Endpoint de contrôle pour ajuster le taux de sampling
+	mux.HandleFunc("/control/sampling", func(w http.ResponseWriter, r *http.Request) {
+		rateStr := r.URL.Query().Get("rate")
+		if rateStr == "" {
+			curr := sampleRate.Load()
+			fmt.Fprintf(w, "current_rate=%v\n", curr)
+			return
+		}
+		rate, err := strconv.ParseFloat(rateStr, 64)
+		if err != nil {
+			http.Error(w, "invalid rate", http.StatusBadRequest)
+			return
+		}
+		if rate < 0 {
+			rate = 0
+		}
+		if rate > 1 {
+			rate = 1
+		}
+		sampleRate.Store(rate)
+		fmt.Fprintf(w, "ok rate=%.3f\n", rate)
 	})
 
 	addr := ":8080"
@@ -121,6 +190,26 @@ func getenv(k, def string) string {
 }
 
 // Retourne "error" si code >=500, sinon "info"
+
+// shouldSample décide si on garde l'événement selon le taux courant
+func shouldSample() bool {
+	v := sampleRate.Load()
+	if v == nil {
+		return true
+	}
+	rate, ok := v.(float64)
+	if !ok {
+		return true
+	}
+	if rate >= 1 {
+		return true
+	}
+	if rate <= 0 {
+		return false
+	}
+	return rand.Float64() < rate
+}
+
 func levelFromStatus(code int) string {
 	if code >= 500 {
 		return "error"
