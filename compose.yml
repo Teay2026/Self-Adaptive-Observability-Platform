@@ -18,12 +18,56 @@ services:
     image: prom/prometheus:latest
     command: ["--config.file=/etc/prometheus/prometheus.yml"]
     volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./prometheus:/etc/prometheus:ro
     ports:
       - "9091:9090"
     depends_on:
       vector:
         condition: service_started
+
+    restart: unless-stopped
+
+  alertmanager:
+    image: prom/alertmanager:latest
+    command: ["--config.file=/etc/alertmanager/alertmanager.yml"]
+    volumes:
+      - ./alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro
+    ports:
+      - "9093:9093"
+    restart: unless-stopped
+
+  webhook:
+    build: ./webhook
+    ports:
+      - "9094:8080"
+    restart: unless-stopped
+
+
+
+  controller:
+    build: ./controller
+    environment:
+      - PROM_URL=http://prometheus:9090
+      - API_URL=http://go-api:8080
+      - INTERVAL=10
+      - WINDOW=2m
+      - SERVICE=api
+      - ENV=dev
+      - ERR_HIGH=0.05
+      - ERR_LOW=0.01
+      - LAT_HIGH=0.35
+      - LAT_LOW=0.20
+      - MIN_RATE=0.1
+      - MAX_RATE=1.0
+      - STEP=0.1
+      - COOLDOWN_SEC=30
+    depends_on:
+      prometheus:
+        condition: service_started
+      go-api:
+        condition: service_started
+    ports:
+      - "9095:8080"  # controller webhook/health
     restart: unless-stopped
 
   grafana:
@@ -39,6 +83,7 @@ services:
     depends_on:
       prometheus:
         condition: service_started
+
     restart: unless-stopped
 
 
@@ -55,3 +100,9 @@ services:
     ports:
       - "8080:8080"
     restart: unless-stopped
+
+
+networks:
+  default:
+    external: true
+    name: ${FABRIC_NETWORK_NAME}

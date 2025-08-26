@@ -99,6 +99,12 @@ func main() {
 	// Exposer /metrics pour Prometheus
 	mux.Handle("/metrics", promhttp.Handler())
 
+	// Liveness/Readiness
+	mux.HandleFunc("/healthz", func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprintln(w, "ok")
+	})
+
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		start := time.Now()
 

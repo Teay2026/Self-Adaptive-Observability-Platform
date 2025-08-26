@@ -1,0 +1,22 @@
+groups:
+  - name: api-health
+    interval: 10s
+    rules:
+      - alert: HighErrorRate
+        expr: sum(rate(api__errors{service="api",env="dev"}[5m])) / clamp_max(sum(rate(api__requests{service="api",env="dev"}[5m])), 1e-9) > 0.05
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High API error rate (>5% over 2m)"
+          description: "Error rate is {{ $value | printf \"%.2f\" }} over the last 5m."
+
+      - alert: HighLatencyP90
+        expr: histogram_quantile(0.9, sum(rate(api_request_duration_seconds_bucket[5m])) by (le)) > 0.25
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High API latency p90 (>250ms over 2m)"
+          description: "p90 latency is {{ $value | printf \"%.3f\" }}s over the last 5m."
+

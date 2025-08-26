@@ -6,14 +6,14 @@
         "type": "stat",
         "title": "Targets UP (vector)",
         "gridPos": { "w": 8, "h": 5, "x": 0, "y": 0 },
-        "datasource": { "type": "prometheus", "uid": "Prometheus" },
+        "datasource": { "type": "prometheus", "uid": "prometheus" },
         "targets": [{ "expr": "sum(up{job=\"vector\"})" }]
       },
       {
         "type": "timeseries",
         "title": "Events/s by component",
         "gridPos": { "w": 16, "h": 10, "x": 8, "y": 0 },
-        "datasource": { "type": "prometheus", "uid": "Prometheus" },
+        "datasource": { "type": "prometheus", "uid": "prometheus" },
         "fieldConfig": { "defaults": { "unit": "ops" }, "overrides": [] },
         "targets": [
           {

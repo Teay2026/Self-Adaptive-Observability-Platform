@@ -13,6 +13,8 @@ sources:
     address: "0.0.0.0:8125"
     mode: "udp"
     use_tags: true          # DogStatsD tags support
+    format: datadog         # ensure Datadog tag parser
+
 
   # App logs over TCP (compose exposes 9000)
   app_logs:
@@ -23,12 +25,42 @@ sources:
       codec: json              # expect JSON lines; use "text" if you send plain text
 
 
+transforms:
+  statsd_sanitize:
+    type: remap
+    inputs: ["statsd_metrics"]
+    drop_on_error: true
+    source: |
+      if exists(.name) { .name = replace!(.name, ".", "_") }
+
+  statsd_labels:
+    type: remap
+    inputs: ["statsd_sanitize"]
+    drop_on_error: true
+    source: |
+      if exists(.tags) && is_object(.tags) && exists(.tags.service) {
+        .tags.service = to_string(.tags.service) ?? ""
+        if contains!(.tags.service, ":") {
+          parts = split!(.tags.service, ":")
+          if length(parts) >= 3 {
+            .tags.service = parts[0]
+            if parts[1] == "env" {
+              .tags.env = parts[2]
+            } else {
+              .tags.env = parts[1]
+            }
+          } else if length(parts) == 2 {
+            .tags.service = parts[0]
+            .tags.env = parts[1]
+          }
+        }
+      }
 
 sinks:
   # Prometheus exporter for metrics (HTTP 9090)
   prometheus_exporter:
     type: prometheus_exporter
-    inputs: ["internal_metrics"]
+    inputs: ["internal_metrics", "statsd_sanitize", "statsd_labels"]
     address: "0.0.0.0:9090"
 
   # Write logs to a file (host-mounted /var/log)

@@ -1,0 +1,72 @@
+{
+  "annotations": {"list": []},
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "type": "stat",
+      "title": "Requests (1m rate)",
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "targets": [{
+        "expr": "sum(irate(api__requests{service=\"api\",env=\"dev\"}[1m]))",
+        "legendFormat": "requests/s"
+      }],
+      "options": {"reduceOptions": {"calcs": ["lastNotNull"]}},
+      "gridPos": {"h": 6, "w": 8, "x": 0, "y": 0}
+    },
+    {
+      "type": "stat",
+      "title": "Errors (1m rate)",
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "targets": [{
+        "expr": "sum(irate(api__errors{service=\"api\",env=\"dev\"}[1m]))",
+        "legendFormat": "errors/s"
+      }],
+      "options": {"reduceOptions": {"calcs": ["lastNotNull"]}},
+      "gridPos": {"h": 6, "w": 8, "x": 8, "y": 0}
+    },
+    {
+      "type": "timeseries",
+      "title": "Requests & Errors (per 1m)",
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "targets": [
+        {"expr": "sum(irate(api__requests{service=\"api\",env=\"dev\"}[1m]))", "legendFormat": "req/s"},
+        {"expr": "sum(irate(api__errors{service=\"api\",env=\"dev\"}[1m]))", "legendFormat": "err/s"}
+      ],
+      "gridPos": {"h": 10, "w": 16, "x": 0, "y": 6}
+    },
+    {
+      "type": "timeseries",
+      "title": "Latency (P50/P90/P99)",
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "targets": [
+        {"expr": "histogram_quantile(0.5, sum(rate(api_request_duration_seconds_bucket[5m])) by (le))", "legendFormat": "p50"},
+        {"expr": "histogram_quantile(0.9, sum(rate(api_request_duration_seconds_bucket[5m])) by (le))", "legendFormat": "p90"},
+        {"expr": "histogram_quantile(0.99, sum(rate(api_request_duration_seconds_bucket[5m])) by (le))", "legendFormat": "p99"}
+      ],
+      "fieldConfig": {"defaults": {"unit": "s"}},
+      "gridPos": {"h": 8, "w": 16, "x": 0, "y": 16}
+    },
+    {
+      "type": "timeseries",
+      "title": "Vector component errors",
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "targets": [
+        {"expr": "sum(rate(vector_component_errors_total[5m])) by (component_id, component_type)", "legendFormat": "{{component_id}} ({{component_type}})"}
+      ],
+      "gridPos": {"h": 8, "w": 16, "x": 0, "y": 24}
+    }
+  ],
+  "schemaVersion": 38,
+  "style": "dark",
+  "tags": ["api", "vector"],
+  "templating": {"list": []},
+  "time": {"from": "now-15m", "to": "now"},
+  "timezone": "",
+  "title": "API Observability",
+  "version": 2
+}
+

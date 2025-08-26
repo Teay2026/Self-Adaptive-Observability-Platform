@@ -1,0 +1,20 @@
+route:
+  receiver: controller
+  group_by: ['alertname']
+  group_wait: 5s
+  group_interval: 10s
+  repeat_interval: 30m
+  routes:
+    - receiver: webhook
+      continue: true
+
+receivers:
+  - name: controller
+    webhook_configs:
+      - url: http://controller:8080/control
+        send_resolved: true
+  - name: webhook
+    webhook_configs:
+      - url: http://webhook:8080/
+        send_resolved: true
+
