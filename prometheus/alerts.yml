@@ -3,7 +3,7 @@ groups:
     interval: 10s
     rules:
       - alert: HighErrorRate
-        expr: sum(rate(api__errors{service="api",env="dev"}[5m])) / clamp_max(sum(rate(api__requests{service="api",env="dev"}[5m])), 1e-9) > 0.05
+        expr: sum(rate(api__errors{service="api",env="dev"}[5m])) / clamp_min(sum(rate(api__requests{service="api",env="dev"}[5m])), 1e-9) > 0.05
         for: 2m
         labels:
           severity: warning

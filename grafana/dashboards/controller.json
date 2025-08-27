@@ -1,0 +1,45 @@
+{
+  "title": "Controller",
+  "timezone": "browser",
+  "panels": [
+    {
+      "type": "stat",
+      "title": "Sampling Rate",
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "targets": [{"expr": "controller_sampling_rate"}],
+      "options": {"reduceOptions": {"calcs": ["lastNotNull"]}},
+      "gridPos": {"h": 5, "w": 8, "x": 0, "y": 0}
+    },
+    {
+      "type": "timeseries",
+      "title": "Sampling Rate over time",
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "targets": [{"expr": "controller_sampling_rate"}],
+      "gridPos": {"h": 8, "w": 16, "x": 0, "y": 5}
+    },
+    {
+      "type": "timeseries",
+      "title": "Decisions (bump/decay)",
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "fieldConfig": {"defaults": {"unit": "ops"}},
+      "targets": [
+        {"expr": "rate(controller_decisions_total{action=\"bump\"}[5m])", "legendFormat": "bump/s"},
+        {"expr": "rate(controller_decisions_total{action=\"decay\"}[5m])", "legendFormat": "decay/s"}
+      ],
+      "gridPos": {"h": 8, "w": 16, "x": 0, "y": 13}
+    },
+    {
+      "type": "timeseries",
+      "title": "Error rate vs p90",
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "targets": [
+        {"expr": "sum(irate(api__errors{service=\"api\",env=\"dev\"}[1m])) / clamp_min(sum(irate(api__requests{service=\"api\",env=\"dev\"}[1m])), 1e-9)", "legendFormat": "err% (Vector)"},
+        {"expr": "histogram_quantile(0.9, sum(rate(api_request_duration_seconds_bucket[5m])) by (le))", "legendFormat": "p90 (s)"}
+      ],
+      "gridPos": {"h": 8, "w": 16, "x": 0, "y": 21}
+    }
+  ],
+  "schemaVersion": 38,
+  "version": 1
+}
+

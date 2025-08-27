@@ -5,7 +5,6 @@ services:
     volumes:
       - ./vector/vector.yaml:/etc/vector/vector.yaml:ro
       - ./data/vector-logs:/var/log
-
     ports:
       - "9090:9090"     # Prometheus exporter
       - "8686:8686"     # Admin API
@@ -49,8 +48,8 @@ services:
     environment:
       - PROM_URL=http://prometheus:9090
       - API_URL=http://go-api:8080
-      - INTERVAL=10
-      - WINDOW=2m
+      - INTERVAL=3
+      - WINDOW=30s
       - SERVICE=api
       - ENV=dev
       - ERR_HIGH=0.05
@@ -60,7 +59,7 @@ services:
       - MIN_RATE=0.1
       - MAX_RATE=1.0
       - STEP=0.1
-      - COOLDOWN_SEC=30
+      - COOLDOWN_SEC=10
     depends_on:
       prometheus:
         condition: service_started

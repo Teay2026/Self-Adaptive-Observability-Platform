@@ -1,6 +1,6 @@
 FROM python:3.12-slim
 WORKDIR /app
-RUN pip install --no-cache-dir requests flask
+RUN pip install --no-cache-dir requests flask prometheus_client
 COPY app.py /app/app.py
 ENV PROM_URL=http://prometheus:9090 \
     API_URL=http://go-api:8080 \
