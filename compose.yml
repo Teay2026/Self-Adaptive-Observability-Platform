@@ -41,6 +41,18 @@ services:
       - "9094:8080"
     restart: unless-stopped
 
+  demo-ui:
+    build: ./demo-ui
+    ports:
+      - "8081:8081"
+    environment:
+      - FLASK_ENV=development
+    depends_on:
+      - controller
+      - go-api
+      - prometheus
+    restart: unless-stopped
+
 
 
   controller:
@@ -103,5 +115,4 @@ services:
 
 networks:
   default:
-    external: true
-    name: ${FABRIC_NETWORK_NAME}
+    driver: bridge

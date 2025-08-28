@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Self-Adaptive Observability Platform</title>
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            line-height: 1.6;
+        }
+        
+        .header {
+            background: #1e293b;
+            border-bottom: 1px solid #334155;
+            padding: 1rem;
+        }
+        
+        .header h1 {
+            color: #38bdf8;
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+        
+        .header p {
+            color: #94a3b8;
+            margin-top: 0.25rem;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .card {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card h2 {
+            color: #f1f5f9;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        
+        .status-healthy { background: #10b981; }
+        .status-warning { background: #f59e0b; }
+        .status-error { background: #ef4444; }
+        
+        .metric-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #334155;
+        }
+        
+        .metric-row:last-child {
+            border-bottom: none;
+        }
+        
+        .metric-label {
+            color: #94a3b8;
+        }
+        
+        .metric-value {
+            font-weight: 600;
+            font-family: 'SF Mono', Consolas, monospace;
+        }
+        
+        .metric-value.success { color: #10b981; }
+        .metric-value.warning { color: #f59e0b; }
+        .metric-value.error { color: #ef4444; }
+        
+        .button {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.2s;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .button:hover {
+            background: #2563eb;
+        }
+        
+        .button.danger {
+            background: #dc2626;
+        }
+        
+        .button.danger:hover {
+            background: #b91c1c;
+        }
+        
+        .button.success {
+            background: #059669;
+        }
+        
+        .button.success:hover {
+            background: #047857;
+        }
+        
+        .input {
+            background: #374151;
+            border: 1px solid #4b5563;
+            color: #f3f4f6;
+            padding: 0.75rem;
+            border-radius: 6px;
+            margin-right: 0.5rem;
+            width: 120px;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin-top: 1rem;
+        }
+        
+        .logs {
+            background: #111827;
+            border: 1px solid #374151;
+            border-radius: 6px;
+            padding: 1rem;
+            font-family: 'SF Mono', Consolas, monospace;
+            font-size: 0.875rem;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .log-entry {
+            padding: 0.25rem 0;
+            border-bottom: 1px solid #374151;
+        }
+        
+        .log-entry:last-child {
+            border-bottom: none;
+        }
+        
+        .log-timestamp {
+            color: #6b7280;
+        }
+        
+        .log-level-info { color: #3b82f6; }
+        .log-level-warn { color: #f59e0b; }
+        .log-level-error { color: #ef4444; }
+        
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #334155;
+            margin-bottom: 1rem;
+        }
+        
+        .tab {
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            color: #94a3b8;
+            transition: all 0.2s;
+        }
+        
+        .tab.active {
+            color: #38bdf8;
+            border-bottom-color: #38bdf8;
+        }
+        
+        .tab:hover {
+            color: #f1f5f9;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border: 2px solid #334155;
+            border-radius: 50%;
+            border-top-color: #38bdf8;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .alert {
+            background: #1f2937;
+            border-left: 4px solid #38bdf8;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 0 6px 6px 0;
+        }
+        
+        .alert.warning {
+            border-left-color: #f59e0b;
+            background: rgba(245, 158, 11, 0.1);
+        }
+        
+        .alert.error {
+            border-left-color: #ef4444;
+            background: rgba(239, 68, 68, 0.1);
+        }
+    </style>
+</head>
+<body x-data="dashboard()">
+    <header class="header">
+        <div class="container">
+            <h1>Self-Adaptive Observability Platform</h1>
+            <p>Real-time monitoring and intelligent sampling control</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- System Status Overview -->
+        <div class="grid">
+            <div class="card">
+                <h2>
+                    <span class="status-indicator" :class="systemHealthy ? 'status-healthy' : 'status-error'"></span>
+                    System Health
+                </h2>
+                <template x-for="service in services" :key="service.name">
+                    <div class="metric-row">
+                        <span class="metric-label" x-text="service.name"></span>
+                        <span class="metric-value" 
+                              :class="service.status === 'healthy' ? 'success' : 'error'"
+                              x-text="service.status"></span>
+                    </div>
+                </template>
+            </div>
+
+            <div class="card">
+                <h2>
+                    <span class="status-indicator status-healthy"></span>
+                    Adaptive Controller
+                </h2>
+                <div class="metric-row">
+                    <span class="metric-label">Sampling Rate</span>
+                    <span class="metric-value" 
+                          :class="controllerState.rate > 0.5 ? 'warning' : 'success'"
+                          x-text="(controllerState.rate * 100).toFixed(1) + '%'"></span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Error Rate</span>
+                    <span class="metric-value" 
+                          :class="controllerState.err > 0.05 ? 'error' : 'success'"
+                          x-text="(controllerState.err * 100).toFixed(2) + '%'"></span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">P90 Latency</span>
+                    <span class="metric-value" 
+                          :class="controllerState.p90 > 0.3 ? 'error' : 'success'"
+                          x-text="controllerState.p90 ? controllerState.p90.toFixed(3) + 's' : 'N/A'"></span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Last Decision</span>
+                    <span class="metric-value" x-text="controllerState.last || 'None'"></span>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>API Metrics</h2>
+                <div class="metric-row">
+                    <span class="metric-label">Requests/sec</span>
+                    <span class="metric-value success" x-text="apiMetrics.requests_per_sec?.toFixed(2) || '0.00'"></span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Total Requests</span>
+                    <span class="metric-value" x-text="apiMetrics.total_requests || '0'"></span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Error Rate</span>
+                    <span class="metric-value" 
+                          :class="(apiMetrics.error_rate_percent || 0) > 5 ? 'error' : 'success'"
+                          x-text="(apiMetrics.error_rate_percent || 0).toFixed(2) + '%'"></span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Avg Latency</span>
+                    <span class="metric-value" x-text="(apiMetrics.latency_p90_ms || 0).toFixed(1) + 'ms'"></span>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Control Actions</h2>
+                <div style="margin-bottom: 1rem;">
+                    <button class="button success" @click="adjustSampling('bump')">
+                        Increase Sampling
+                    </button>
+                    <button class="button danger" @click="adjustSampling('decay')">
+                        Decrease Sampling
+                    </button>
+                </div>
+                <div style="margin-bottom: 1rem;">
+                    <input type="number" class="input" x-model="manualRate" 
+                           min="0" max="1" step="0.1" placeholder="0.5">
+                    <button class="button" @click="setManualRate()">Set Rate</button>
+                </div>
+                <div>
+                    <input type="number" class="input" x-model="loadDuration" 
+                           min="10" max="300" placeholder="60">
+                    <input type="number" class="input" x-model="loadConcurrency" 
+                           min="1" max="20" placeholder="4">
+                    <button class="button" @click="generateLoad()" 
+                            :disabled="loadGenerating">
+                        <span x-show="!loadGenerating">Generate Load</span>
+                        <span x-show="loadGenerating">Generating...</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts and Logs -->
+        <div class="grid" style="grid-template-columns: 1fr 1fr;">
+            <div class="card">
+                <h2>Sampling Rate Timeline</h2>
+                <div class="chart-container">
+                    <canvas id="samplingChart"></canvas>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2>Request Metrics</h2>
+                <div class="chart-container">
+                    <canvas id="metricsChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Service Links -->
+        <div class="card">
+            <h2>Service Dashboard Links</h2>
+            <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                <a href="http://localhost:9091" target="_blank" class="button">Prometheus</a>
+                <a href="http://localhost:3000" target="_blank" class="button">Grafana</a>
+                <a href="http://localhost:9093" target="_blank" class="button">AlertManager</a>
+                <a href="http://localhost:9095" target="_blank" class="button">Controller UI</a>
+                <a href="http://localhost:8080/metrics" target="_blank" class="button">API Metrics</a>
+                <a href="http://localhost:9095/metrics" target="_blank" class="button">Controller Metrics</a>
+            </div>
+        </div>
+
+        <!-- Logs -->
+        <div class="card">
+            <h2>Recent Activity</h2>
+            <div class="logs" id="logs">
+                <template x-for="log in recentLogs" :key="log.id">
+                    <div class="log-entry">
+                        <span class="log-timestamp" x-text="log.timestamp"></span>
+                        <span :class="'log-level-' + log.level" x-text="log.level.toUpperCase()"></span>
+                        <span x-text="log.message"></span>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function dashboard() {
+            return {
+                services: [],
+                controllerState: {},
+                apiMetrics: {},
+                manualRate: 0.5,
+                loadDuration: 60,
+                loadConcurrency: 4,
+                loadGenerating: false,
+                recentLogs: [],
+                samplingChart: null,
+                metricsChart: null,
+                samplingData: [],
+                metricsData: [],
+
+                init() {
+                    this.initCharts();
+                    this.loadData();
+                    this.startPolling();
+                },
+
+                async loadData() {
+                    await Promise.all([
+                        this.loadServiceStatus(),
+                        this.loadControllerState(),
+                        this.loadApiMetrics()
+                    ]);
+                },
+
+                async loadServiceStatus() {
+                    try {
+                        const response = await fetch('/api/status');
+                        if (response.ok) {
+                            const data = await response.json();
+                            this.services = Object.entries(data).map(([name, info]) => ({
+                                name: name,
+                                status: info.status || 'unknown',
+                                ...info
+                            }));
+                        }
+                    } catch (error) {
+                        console.error('Failed to load service status:', error);
+                    }
+                },
+
+                async loadControllerState() {
+                    try {
+                        const response = await fetch('/api/controller/state');
+                        if (response.ok) {
+                            this.controllerState = await response.json();
+                            this.updateSamplingChart();
+                        }
+                    } catch (error) {
+                        console.error('Failed to load controller state:', error);
+                    }
+                },
+
+                async loadApiMetrics() {
+                    try {
+                        const response = await fetch('/api/metrics/summary');
+                        if (response.ok) {
+                            this.apiMetrics = await response.json();
+                            this.updateMetricsChart();
+                        }
+                    } catch (error) {
+                        console.error('Failed to load API metrics:', error);
+                    }
+                },
+
+                async adjustSampling(action) {
+                    try {
+                        const response = await fetch('/api/controller/rate', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ action })
+                        });
+                        if (response.ok) {
+                            await this.loadControllerState();
+                            this.addLog('info', `Sampling ${action} executed successfully`);
+                        } else {
+                            const error = await response.json();
+                            this.addLog('error', `Failed to ${action} sampling: ${error.error}`);
+                        }
+                    } catch (error) {
+                        this.addLog('error', `Request failed: ${error.message}`);
+                    }
+                },
+
+                async setManualRate() {
+                    try {
+                        const response = await fetch('/api/controller/rate', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ value: this.manualRate })
+                        });
+                        if (response.ok) {
+                            await this.loadControllerState();
+                            this.addLog('info', `Sampling rate set to ${this.manualRate}`);
+                        } else {
+                            const error = await response.json();
+                            this.addLog('error', `Failed to set rate: ${error.error}`);
+                        }
+                    } catch (error) {
+                        this.addLog('error', `Request failed: ${error.message}`);
+                    }
+                },
+
+                async generateLoad() {
+                    if (this.loadGenerating) return;
+                    
+                    this.loadGenerating = true;
+                    try {
+                        const response = await fetch('/api/load', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                duration: this.loadDuration,
+                                concurrency: this.loadConcurrency,
+                                url: 'http://localhost:8080/'
+                            })
+                        });
+                        
+                        const result = await response.json();
+                        if (result.success) {
+                            this.addLog('info', `Load generation started: ${this.loadDuration}s with ${this.loadConcurrency} workers`);
+                            // Wait for the load generation to complete
+                            setTimeout(() => {
+                                this.loadGenerating = false;
+                                this.addLog('info', 'Load generation completed');
+                            }, this.loadDuration * 1000);
+                        } else {
+                            this.addLog('error', `Load generation failed: ${result.error}`);
+                            this.loadGenerating = false;
+                        }
+                    } catch (error) {
+                        this.addLog('error', `Load generation failed: ${error.message}`);
+                        this.loadGenerating = false;
+                    }
+                },
+
+                addLog(level, message) {
+                    const log = {
+                        id: Date.now(),
+                        timestamp: new Date().toLocaleTimeString(),
+                        level,
+                        message
+                    };
+                    this.recentLogs.unshift(log);
+                    if (this.recentLogs.length > 50) {
+                        this.recentLogs = this.recentLogs.slice(0, 50);
+                    }
+                },
+
+                get systemHealthy() {
+                    return this.services.every(s => s.status === 'healthy');
+                },
+
+                startPolling() {
+                    setInterval(() => {
+                        this.loadData();
+                    }, 5000);
+                },
+
+                initCharts() {
+                    // Sampling Rate Chart
+                    const samplingCtx = document.getElementById('samplingChart').getContext('2d');
+                    this.samplingChart = new Chart(samplingCtx, {
+                        type: 'line',
+                        data: {
+                            labels: [],
+                            datasets: [{
+                                label: 'Sampling Rate (%)',
+                                data: [],
+                                borderColor: '#38bdf8',
+                                backgroundColor: 'rgba(56, 189, 248, 0.1)',
+                                tension: 0.4
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: { labels: { color: '#e2e8f0' } }
+                            },
+                            scales: {
+                                x: { ticks: { color: '#94a3b8' } },
+                                y: { 
+                                    ticks: { color: '#94a3b8' },
+                                    min: 0,
+                                    max: 100
+                                }
+                            }
+                        }
+                    });
+
+                    // Metrics Chart
+                    const metricsCtx = document.getElementById('metricsChart').getContext('2d');
+                    this.metricsChart = new Chart(metricsCtx, {
+                        type: 'line',
+                        data: {
+                            labels: [],
+                            datasets: [{
+                                label: 'Requests/sec',
+                                data: [],
+                                borderColor: '#10b981',
+                                backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                                tension: 0.4
+                            }, {
+                                label: 'Error Rate (%)',
+                                data: [],
+                                borderColor: '#ef4444',
+                                backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                                tension: 0.4
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: { labels: { color: '#e2e8f0' } }
+                            },
+                            scales: {
+                                x: { ticks: { color: '#94a3b8' } },
+                                y: { ticks: { color: '#94a3b8' } }
+                            }
+                        }
+                    });
+                },
+
+                updateSamplingChart() {
+                    if (!this.samplingChart) return;
+                    
+                    const now = new Date().toLocaleTimeString();
+                    const rate = (this.controllerState.rate || 0) * 100;
+                    
+                    this.samplingChart.data.labels.push(now);
+                    this.samplingChart.data.datasets[0].data.push(rate);
+                    
+                    // Keep only last 20 points
+                    if (this.samplingChart.data.labels.length > 20) {
+                        this.samplingChart.data.labels.shift();
+                        this.samplingChart.data.datasets[0].data.shift();
+                    }
+                    
+                    this.samplingChart.update('none');
+                },
+
+                updateMetricsChart() {
+                    if (!this.metricsChart) return;
+                    
+                    const now = new Date().toLocaleTimeString();
+                    const requests = this.apiMetrics.requests_per_sec || 0;
+                    const errors = this.apiMetrics.error_rate_percent || 0;
+                    
+                    this.metricsChart.data.labels.push(now);
+                    this.metricsChart.data.datasets[0].data.push(requests);
+                    this.metricsChart.data.datasets[1].data.push(errors);
+                    
+                    // Keep only last 20 points
+                    if (this.metricsChart.data.labels.length > 20) {
+                        this.metricsChart.data.labels.shift();
+                        this.metricsChart.data.datasets[0].data.shift();
+                        this.metricsChart.data.datasets[1].data.shift();
+                    }
+                    
+                    this.metricsChart.update('none');
+                }
+            }
+        }
+    </script>
+</body>
+</html>

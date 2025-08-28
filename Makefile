@@ -21,6 +21,7 @@ urls: ## Print service URLs
 	@echo "Alertmanager:  http://localhost:9093" 
 	@echo "Controller:    http://localhost:9095/healthz (and /metrics)" 
 	@echo "Grafana:       http://localhost:3000 (admin/admin)"
+	@echo "Demo UI:       http://localhost:8081"
 
 logs: ## Follow controller logs
 	docker compose logs -f controller
@@ -35,4 +36,14 @@ load: .demo-check ## Generate load for 60s (override DURATION=.. CONCURRENCY=.. 
 demo: up urls ## Run a simple demo: start, print URLs, generate load
 	$(MAKE) load DURATION=90 CONCURRENCY=6
 	$(MAKE) logs
+
+demo-ui: ## Start only the demo UI for testing
+	cd demo-ui && python app.py
+
+test-demo: ## Test the demo UI endpoints
+	curl -s http://localhost:8081/api/health | jq .
+	curl -s http://localhost:8081/api/status | jq .
+
+demo: ## Run the complete interactive demo
+	python demo_platform.py
 
